@@ -1,8 +1,11 @@
 const notes = {
-    file: "./todo.txt",
+    file: "./todo.json",
     fs: require("fs"),
-    add: (text) => {
-        notes.fs.writeFileSync(notes.file, text, "utf-8");
+    add: (new_note) => {
+        const all_data = require(notes.file);
+        all_data.notes.push(new_note);
+        notes.fs.writeFileSync(notes.file, JSON.stringify(all_data), "utf-8");
+        return all_data;
     },
     list: () => { console.log("not done"); },
     read: (title) => { console.log("not done"); },
