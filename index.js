@@ -12,12 +12,10 @@ function main() {
                 title: title,
                 body: body
             };
-            console.log(notes.add(new_note));
-            //notes.add(json)
+            notes.add(new_note);
             break;
         }
         case "list" : {
-            //string = notes.list()
             console.log("list");
             break;
         }
