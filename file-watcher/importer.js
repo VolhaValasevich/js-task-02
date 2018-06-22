@@ -1,11 +1,22 @@
 class Importer {
     constructor() {
         this.dirwatcher = require("./dirwatcher.js");
+        this.fs = require("fs");
+        this.csvregexp = /.+\.csv$/
     }
-    
-    listen(dir, delay) {
-        const func = this.dirwatcher.watch(dir, delay);
-        func.on("change", (path) => {console.log("Emit listened " + path)});
+
+    import(path) {
+
+    }
+
+    importSync(path) {
+        const func = this.dirwatcher.watch(path, 100);
+        func.on("change", (file) => {
+            if (file.match(this.csvregexp)) {
+                const file_content = this.fs.readFileSync(file, "utf-8");
+                console.log(file_content);
+            }
+        });
     }
 }
 
