@@ -1,14 +1,16 @@
+const EventEmitter = require("events").EventEmitter;
+
 const DirWatcher = {
     chokidar: require("chokidar"),
-    watch: (path, delay) => {
-        const dirwatch = DirWatcher.chokidar.watch(path, {
+    emitter: new EventEmitter(),
+    watch: (dir, delay) => {
+        const dirwatch = DirWatcher.chokidar.watch(dir, {
             persistent: true,
+            usePolling: true,
             interval: delay
         })
-        dirwatch
-            .on('add', path => console.log(`File ${path} has been added`))
-            .on('change', path => console.log(`File ${path} has been changed`))
-            .on('unlink', path => console.log(`File ${path} has been removed`));
+        dirwatch.on("all", (event, path) => { DirWatcher.emitter.emit("change", path); })
+        return DirWatcher.emitter;
     }
 }
 

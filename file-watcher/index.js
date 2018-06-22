@@ -1,3 +1,3 @@
-dirwatcher = require("./dirwatcher.js");
-
-dirwatcher.watch("./", 100);
+const Importer = require("./importer.js");
+const importer = new Importer();
+importer.listen(".", 100);
