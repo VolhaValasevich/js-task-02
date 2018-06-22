@@ -20,8 +20,7 @@ function main() {
             break;
         }
         case "read" : {
-            //string = notes.read(title)
-            console.log("read");
+            console.log(notes.read(title));
             break;
         }
         case "delete" : {
