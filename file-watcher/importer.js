@@ -2,6 +2,7 @@ class Importer {
     constructor() {
         this.dirwatcher = require("./dirwatcher.js");
         this.fs = require("fs");
+        this.csvtojson = require("csvtojson");
         this.csvregexp = /.+\.csv$/
     }
 
@@ -11,12 +12,16 @@ class Importer {
 
     importSync(path) {
         const func = this.dirwatcher.watch(path, 100);
+        let data = [];
         func.on("change", (file) => {
             if (file.match(this.csvregexp)) {
-                const file_content = this.fs.readFileSync(file, "utf-8");
-                console.log(file_content);
+                this.csvtojson()
+                    .fromFile(file)
+                    .then((jsonarray) => { return jsonarray})
+                    .then((jsonarray) => console.log(jsonarray))
             }
         });
+        return data;
     }
 }
 

@@ -9,7 +9,8 @@ const DirWatcher = {
             usePolling: true,
             interval: delay
         })
-        dirwatch.on("all", (event, path) => { DirWatcher.emitter.emit("change", path); })
+        dirwatch.on("add", (path) => { DirWatcher.emitter.emit("change", path); })
+                .on("change", (path) => { DirWatcher.emitter.emit("change", path); })
         return DirWatcher.emitter;
     }
 }
