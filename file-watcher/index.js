@@ -1,3 +1,4 @@
 const Importer = require("./importer.js");
 const importer = new Importer();
-importer.importSync(".");
+const path = process.argv[2];
+importer.importSync(path);
