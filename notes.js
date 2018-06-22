@@ -11,7 +11,18 @@ const notes = {
         notes.fs.writeFileSync(notes.file, JSON.stringify(all_data), "utf-8");
         return "Note was successfully added";
     },
-    list: () => { console.log("not done"); },
+    list: () => {
+        let all_data, resultstring = "";
+        try {
+            all_data = require(notes.file);
+        } catch (err) {
+            return "File is empty or cannot be read";
+        }
+        all_data.notes.forEach((element, index) => {
+            resultstring += `Note ${index}:\n${element.title} - ${element.body}\n`;
+        })
+        return resultstring;
+    },
     read: (title) => { console.log("not done"); },
     remove: (title) => { console.log("not done"); },
 }

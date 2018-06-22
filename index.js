@@ -12,11 +12,11 @@ function main() {
                 title: title,
                 body: body
             };
-            notes.add(new_note);
+            console.log(notes.add(new_note));
             break;
         }
         case "list" : {
-            console.log("list");
+            console.log(notes.list());
             break;
         }
         case "read" : {
