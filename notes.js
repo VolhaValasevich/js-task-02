@@ -2,7 +2,7 @@ const notes = {
     file: "./todo.json",
     fs: require("fs"),
     add: (new_note) => {
-        const all_data = require(notes.file);
+        const all_data = notes.checkfile(notes.file);
         //a simple loop is used instead of forEach to be able to return from the function
         for (let i = 0; i < all_data.notes.length; i++) {
             if (all_data.notes[i].title == new_note.title) return "This note already exists!";
@@ -12,24 +12,15 @@ const notes = {
         return "Note was successfully added";
     },
     list: () => {
-        let all_data, resultstring = "";
-        try {
-            all_data = require(notes.file);
-        } catch (err) {
-            return "File is empty or cannot be read";
-        }
+        let resultstring = "";
+        const all_data = notes.checkfile(notes.file);
         all_data.notes.forEach((element, index) => {
             resultstring += `Note ${index}:\n${element.title} - ${element.body}\n`;
         })
         return resultstring;
     },
     read: (title) => { 
-        let all_data;
-        try {
-            all_data = require(notes.file);
-        } catch (err) {
-            return "File is empty or cannot be read";
-        }
+        const all_data = notes.checkfile(notes.file);
         //a simple loop is used instead of forEach to be able to return from the function
         for (let i = 0; i < all_data.notes.length; i++) {
             if (all_data.notes[i].title === title) return `${all_data.notes[i].title} - ${all_data.notes[i].body}`;
@@ -37,12 +28,7 @@ const notes = {
         return "No such note found";
     },
     remove: (title) => { 
-        let all_data;
-        try {
-            all_data = require(notes.file);
-        } catch (err) {
-            return "File is empty or cannot be read";
-        }
+        const all_data = notes.checkfile(notes.file);
         //a simple loop is used instead of forEach to be able to break from it
         for (let i = 0; i < all_data.notes.length; i++) {
             if (all_data.notes[i].title === title) {
@@ -53,6 +39,16 @@ const notes = {
         }
         return "No such note found";
     },
+    checkfile: (file) => {
+        const default_content = '{"notes":[]}';
+        try {
+            const all_data = require(file);
+            return all_data;
+        } catch (err) {
+            notes.fs.writeFileSync(file, default_content, "utf-8");
+            return JSON.parse(default_content);
+        } 
+    } 
 }
 
 module.exports = notes;
