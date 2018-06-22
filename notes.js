@@ -36,7 +36,23 @@ const notes = {
         }
         return "No such note found";
     },
-    remove: (title) => { console.log("not done"); },
+    remove: (title) => { 
+        let all_data;
+        try {
+            all_data = require(notes.file);
+        } catch (err) {
+            return "File is empty or cannot be read";
+        }
+        //a simple loop is used instead of forEach to be able to break from it
+        for (let i = 0; i < all_data.notes.length; i++) {
+            if (all_data.notes[i].title === title) {
+                all_data.notes.splice(i, 1);
+                notes.fs.writeFileSync(notes.file, JSON.stringify(all_data), "utf-8");
+                return "Note was successfully deleted";
+            }
+        }
+        return "No such note found";
+    },
 }
 
 module.exports = notes;

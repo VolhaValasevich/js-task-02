@@ -23,9 +23,8 @@ function main() {
             console.log(notes.read(title));
             break;
         }
-        case "delete" : {
-            //notes.delete(title)
-            console.log("delete");
+        case "remove" : {
+            console.log(notes.remove(title));
             break;
         }
         case undefined: {
