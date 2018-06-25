@@ -7,7 +7,21 @@ class Importer {
     }
 
     import(path) {
-
+        return new Promise((resolve, reject) => {
+            const func = this.dirwatcher.watch(path, 100);
+            func.on("change", (file) => {
+                console.log(file);
+                if (file.match(this.csvregexp)) {
+                    try {
+                        this.csvtojson()
+                            .fromFile(file)
+                            .then((jsonarray) => resolve(jsonarray))
+                    } catch (err) {
+                        reject(err);
+                    }
+                }
+            });
+        })
     }
 
     importSync(path) {
@@ -17,7 +31,6 @@ class Importer {
             if (file.match(this.csvregexp)) {
                 this.csvtojson()
                     .fromFile(file)
-                    .then((jsonarray) => { return jsonarray})
                     .then((jsonarray) => console.log(jsonarray))
             }
         });
