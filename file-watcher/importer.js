@@ -1,6 +1,8 @@
+const DirWatcher = require("./dirwatcher.js");
+
 class Importer {
     constructor() {
-        this.dirwatcher = require("./dirwatcher.js");
+        this.dirwatcher = new DirWatcher();
         this.fs = require("fs");
         this.csvtojson = require("csvtojson");
         this.csvregexp = /.+\.csv$/
