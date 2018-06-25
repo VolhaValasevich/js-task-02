@@ -1,13 +1,9 @@
 const EventEmitter = require("events").EventEmitter;
 
-class DirWatcher {
-    
-    constructor() {
-        this.chokidar = require("chokidar");
-        this.emitter = new EventEmitter();
-    }
-    
-    watch(dir, delay) {
+const DirWatcher = {
+    chokidar: require("chokidar"),
+    emitter: new EventEmitter(),
+    watch: (dir, delay) => {
         const dirwatch = DirWatcher.chokidar.watch(dir, {
             persistent: true,
             usePolling: true,
