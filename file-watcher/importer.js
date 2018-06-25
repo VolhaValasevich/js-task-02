@@ -3,27 +3,38 @@ class Importer {
         this.dirwatcher = require("./dirwatcher.js");
         this.fs = require("fs");
         this.csvtojson = require("csvtojson");
-        this.csvregexp = /.+\.csv$/
+        this.util = require("util");
     }
 
     import(path) {
         return new Promise((resolve, reject) => {                   //method returns a promise with imported data
             const func = this.dirwatcher.watch(path, 100);          //staring watching a given path
             func.on("change", (file) => {                           //listening to a "change" event emitted by dirwatcher
-                if (file.match(this.csvregexp)) {                   //checking if a new file is a .csv file
-                    console.log("Changed: " + file);
-                    try {
-                        this.csvtojson()                            //converting .csv to .json
-                            .fromFile(file)
-                            .then((jsonarray) => {
-                                this.fs.writeFile(file.replace("csv", "json"), JSON.stringify(jsonarray), "utf-8", (err) => { //writing in a .json file
-                                    if (err) reject(err);
-                                    console.log(file + " imported.");
-                                    resolve(jsonarray);             
-                                });
-                            })
-                    } catch (err) { reject(err) }
-                }
+                const read = this.util.promisify(this.fs.readdir);
+                read(path).then((files, err) => {                   //reading all files in a directory
+                    let data = [];
+                    if (err) reject(err);
+                    for (let i = 0; i < files.length; i++) {
+                        if (files[i].match(/.+\.csv$/)) {
+                            console.log("Changed: " + files[i]);
+                            try {
+                                this.csvtojson()                            //converting .csv to .json
+                                    .fromFile(path + "/" + files[i])
+                                    .then((jsonarray) => {
+                                        data.push(jsonarray);
+                                    })
+                                    .catch((err) => { console.log(err) })
+                            } catch (err) { return (err) }
+                        }
+                    }
+                    return data;
+                }).then((data) => {
+                    console.log("DATAAAAAAAAAAAAAAAAAAA" + data + "adaw");
+                    this.fs.writeFile(path + "/imported.json", JSON.stringify(data), "utf-8", (err) => {
+                        if (err) reject(err);
+                    })
+                    resolve(data);
+                })
             });
         })
     }
@@ -44,6 +55,10 @@ class Importer {
                     })
             }
         });
+    }
+
+    readfile(path) {
+
     }
 }
 

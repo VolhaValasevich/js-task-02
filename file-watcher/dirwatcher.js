@@ -9,8 +9,10 @@ const DirWatcher = {
             usePolling: true,
             interval: delay
         })
-        dirwatch.on("add", (path) => { DirWatcher.emitter.emit("change", path); })
-                .on("change", (path) => { DirWatcher.emitter.emit("change", path); })
+        dirwatch.on("all", (event, path) => {
+            console.log(path);
+            if (path.match(/.+\.csv$/)) { DirWatcher.emitter.emit("change", path); }
+        })
         return DirWatcher.emitter;
     }
 }
