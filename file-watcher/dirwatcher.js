@@ -8,14 +8,14 @@ class DirWatcher {
     }
     
     watch(dir, delay) {
-        const dirwatch = DirWatcher.chokidar.watch(dir, {
+        const dirwatch = this.chokidar.watch(dir, {
             persistent: true,
             usePolling: true,
             interval: delay
         })
-        dirwatch.on("add", (path) => { DirWatcher.emitter.emit("change", path); })
-                .on("change", (path) => { DirWatcher.emitter.emit("change", path); })
-        return DirWatcher.emitter;
+        dirwatch.on("add", (path) => { this.emitter.emit("change", path); })
+                .on("change", (path) => { this.emitter.emit("change", path); })
+        return this.emitter;
     }
 }
 
